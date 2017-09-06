@@ -43,7 +43,8 @@
     "px-starter-kit-design": "^1.0.0",
     "px-layout-design": "^1.0.0",
     "px-headings-design": "^1.0.3",
-    "px-meta-lists-design": "^1.0.1"
+    "px-meta-lists-design": "^1.0.1",
+    "px-actionable-design": "^2.0.4"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
