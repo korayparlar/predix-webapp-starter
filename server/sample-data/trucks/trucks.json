@@ -1,0 +1,20 @@
+[
+  {
+  "id":"TK_1",
+  "region" : "BLACK SEA",
+  "type": "4GEN",
+  "truckPurchasedDate":"4/5/2010  6:40:36 AM"
+  },
+  {
+    "id":"TK_2",
+    "region" : "BLACK SEA",
+    "type": "4GEN",
+    "truckPurchasedDate":"4/5/2010  6:40:36 AM"
+  },
+  {
+    "id":"TK_3",
+    "region" : "BLACK SEA",
+    "type": "4GEN",
+    "truckPurchasedDate":"4/5/2010  6:40:36 AM"
+  }
+]
