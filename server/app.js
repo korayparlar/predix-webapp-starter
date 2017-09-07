@@ -168,7 +168,7 @@ app.use(['/mock-api/predix-asset', '/api/predix-asset'], jsonServer.router(mockA
 app.use(['/mock-api/predix-timeseries', '/api/predix-timeseries'], mockTimeSeriesRouter);
 app.use(['/mock-api/datagrid', '/api/datagrid'], jsonServer.router(mockRmdDatasourceRoutes));
 app.use(['/mock-api/trucks', '/api/trucks'], jsonServer.router(mockTrucksRoutes));
-
+app.use('/trucks', passport.authenticate('main', {noredirect: true}), proxy.router);
 require('./routes/mock-live-data.js')(httpServer);
 // ***** END MOCK ROUTES *****
 

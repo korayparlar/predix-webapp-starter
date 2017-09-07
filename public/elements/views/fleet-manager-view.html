@@ -14,11 +14,14 @@
     <px-card header-text="Trucks" icon="px-obj:truck">
       <px-data-table selectable  single-select="true"  table-data="{{trucksTableData}}">
       </px-data-table>
+      <px-data-table selectable  single-select="true"  table-data="{{trucksTableData2}}">
+      </px-data-table>
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
       <!-- First option loads sample data from a json file in the server/sample-data directory. -->
       <!-- mock-asset-service -->
       <iron-ajax url="/mock-api/trucks/trucks" id="trucksQueryElement" last-response="{{trucksTableData}}" auto></iron-ajax>
+      <iron-ajax url="/predix-api/predix-asset/trucks" id="trucksQueryElement2" last-response="{{trucksTableData2}}" auto></iron-ajax>
       <!-- end mock-asset-service -->
     </px-card>
   </template>
