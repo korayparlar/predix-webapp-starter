@@ -16,6 +16,12 @@
       </px-data-table>
       <px-data-table selectable  single-select="true"  table-data="{{trucksTableData2}}">
       </px-data-table>
+      <asset-browser id="assetBrowser"
+                     asset-model="{{truckAssetModel}}"
+                     opened-asset="{{openedAsset}}"
+                     asset-query-url="/predix-api/predix-asset/trucks"
+                     asset-group-query-url="/predix-api/predix-asset/group">
+      </asset-browser>
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
       <!-- First option loads sample data from a json file in the server/sample-data directory. -->
@@ -28,11 +34,34 @@
   <script>
     Polymer({
       is: 'fleet-manager-view',
-      ready: function() {
-      },
+      properties: {
       trucksTableData: {
         type: Object
-      }
+      },
+      truckAssetModel: {
+          type: Object,
+          observer: '_truckAssetModelChanged'
+        },
+        openedAsset: {
+          type: Object,
+          observer: '_openedAssetChanged'
+        }
+      },
+      ready: function() {
+      },
+      _truckAssetModelChanged: function(newVal) {
+        console.log('truck asset model changed:', newVal);
+      },
+      _openedAssetChanged: function(newVal) {
+        console.log('asset opened:', newVal);
+        //this.$.datatableAjaxEl.url = "/api/datagrid" + newVal.uri;
+        //this.$.kpiBarAjaxEl.url = this.$.datatableAjaxEl.url + '/summary';
+        //this.$.datatableAjaxEl.generateRequest();
+        //if (newVal.assetTag) {
+        //  this.displayTags = this._formatTagsForDisplay(newVal.assetTag);
+        //}
+        //this.showTimeseriesChart = newVal.uri.indexOf('trucks') >= 0;
+      },
     });
   </script>
 </dom-module>

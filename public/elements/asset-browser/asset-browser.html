@@ -135,7 +135,7 @@
         entity.id = entity.uri;
         entity.parentId = entity.parent || entity.group;
         // we can only open plants or assets:
-        entity.isOpenable = (entity.uri.indexOf('plant') >= 0 || entity.uri.indexOf('asset') >= 0);
+        entity.isOpenable = (entity.uri.indexOf('plant') >= 0 || entity.uri.indexOf('asset') >= 0 || entity.uri.indexOf('trucks') >= 0);
         // entity.meta = {parentId: entity.parentId};
         return entity;
       }
