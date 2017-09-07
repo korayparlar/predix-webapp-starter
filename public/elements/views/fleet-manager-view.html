@@ -1,32 +1,15 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/px-spinner/px-spinner.html" />
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+
 <link rel="import" href="fleet-manager-view-styles.html">
+
+
 
 <dom-module id="fleet-manager-view">
   <template>
     <style include="fleet-manager-view-styles"></style>
-      <p>Hello World!</p>
-    <px-spinner size="50"></px-spinner>
-
-    <!-- Default Actionable Text & Icon -->
-    <!-- Small -->
-    <span class="actionable actionable--small">Hello World!</span>
-    <br>
-    <!-- Large -->
-    <span class="actionable actionable--large">Hello World!</span>
-    <br>
-    <!-- Huge -->
-    <span class="actionable actionable--huge">Hello World!</span>
-    <br>
-    <!-- Secondary -->
-    <span class="actionable actionable--secondary">Hello World!</span>
-    <br>
-    <!-- Select -->
-    <span class="actionable actionable--select">Hello World!</span>
-    <br>
-    <!-- Disabled -->
-    <span class="actionable actionable--disabled">Hello World!</span>
-
+    <px-card header-text="Trucks" icon="px-obj:truck">
+    </px-card>
   </template>
   <script>
     Polymer({
