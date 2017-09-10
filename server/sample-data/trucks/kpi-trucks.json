@@ -1,0 +1,24 @@
+[{
+	"kpis": [{
+		"value": "2500000",
+		"label": "Total Cost",
+		"uom": "$"
+	}, {
+		"value": "1800000",
+		"label": "Planned Cost",
+		"uom": null
+	}, {
+		"value": "700000",
+		"label": "Unplanned Cost",
+		"uom": "%"
+	}, {
+		"value": "180000",
+		"label": "Average Cost",
+		"uom": "%"
+	}],
+	"overall": {
+		"title": "KPI Health",
+		"subtitle": "trucks",
+		"percentage": 72
+	}
+}]

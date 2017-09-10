@@ -161,12 +161,16 @@ SET UP MOCK API ROUTES
 // Import route modules
 var mockAssetRoutes = require('./routes/mock-asset.js')();
 var mockTimeSeriesRouter = require('./routes/mock-time-series.js');
+var mockTruckTimeSeriesRouter = require('./routes/mock-time-series-trucks.js');
 var mockRmdDatasourceRoutes = require('./routes/mock-rmd-datasource.js')();
+var mockDatasourceTrucksRoutes = require('./routes/mock-datasource-trucks.js')();
 var mockTrucksRoutes = require('./routes/mock-trucks.js')();
 // add mock API routes.  (Remove these before deploying to production.)
 app.use(['/mock-api/predix-asset', '/api/predix-asset'], jsonServer.router(mockAssetRoutes));
 app.use(['/mock-api/predix-timeseries', '/api/predix-timeseries'], mockTimeSeriesRouter);
+app.use(['/mock-api/predix-timeseries-truck', '/api/predix-timeseries-trucks'], mockTruckTimeSeriesRouter);
 app.use(['/mock-api/datagrid', '/api/datagrid'], jsonServer.router(mockRmdDatasourceRoutes));
+app.use(['/mock-api/datagrid-trucks', '/api/datagrid-trucks'], jsonServer.router(mockDatasourceTrucksRoutes));
 app.use(['/mock-api/trucks', '/api/trucks'], jsonServer.router(mockTrucksRoutes));
 app.use('/trucks', passport.authenticate('main', {noredirect: true}), proxy.router);
 require('./routes/mock-live-data.js')(httpServer);

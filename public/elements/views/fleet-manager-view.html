@@ -2,6 +2,9 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/px-data-table/px-data-table.html" />
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../asset-browser/asset-browser.html">
+<link rel="import" href="./truck-maintenance-table.html">
+<link rel="import" href="../kpi-bar/kpi-bar.html">
 
 
 <link rel="import" href="fleet-manager-view-styles.html">
@@ -22,12 +25,38 @@
                      asset-query-url="/predix-api/predix-asset/trucks"
                      asset-group-query-url="/predix-api/predix-asset/group">
       </asset-browser>
+      <kpi-bar datapoints="[[kpiDatapoints]]"
+               overall-label="[[kpiOverallLabel]]"
+               overall-value="[[kpiOverallValue]]"
+               overall-max="[[kpiOverallMax]]"
+               kpi-bar-wrapper-state="[[kpiBarWrapperState]]">
+      </kpi-bar>
+      <!--<truck-maintenance-table id="seedTable" truck-maintenance-data="{{truckMaintenanceData}}"></truck-maintenance-table>-->
+      <px-data-table selectable  single-select="true"  table-data="{{truckMaintenanceData}}">
+      </px-data-table>
+      <timeseries-trucks-chart id="tsChart" ws-url="[[wsUrl]]"
+                        tags="{{displayTags}}" hidden$="{{!showTimeseriesChart}}"></timeseries-trucks-chart>
+
+
+
+
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
       <!-- First option loads sample data from a json file in the server/sample-data directory. -->
       <!-- mock-asset-service -->
       <iron-ajax url="/mock-api/trucks/trucks" id="trucksQueryElement" last-response="{{trucksTableData}}" auto></iron-ajax>
       <iron-ajax url="/predix-api/predix-asset/trucks" id="trucksQueryElement2" last-response="{{trucksTableData2}}" auto></iron-ajax>
+      <iron-ajax id="kpiBarAjaxEl"></iron-ajax>
+
+      <!-- If the RMD datasource is not enabled, you can pass in an asset directly. -->
+      <!--<seed-table asset-data="{{openedAsset}}" show-asset-only="true"></seed-table>-->
+
+      <!-- If RMD datasource is enabled, call that and pass data to the table. -->
+
+      <iron-ajax id="datatableAjaxEl"></iron-ajax>
+
+
+
       <!-- end mock-asset-service -->
     </px-card>
   </template>
@@ -45,23 +74,91 @@
         openedAsset: {
           type: Object,
           observer: '_openedAssetChanged'
+        },
+        truckMaintenanceData: {
+          type: Object
+        },
+        displayTags: {
+          type: Array
+        },
+        showTimeseriesChart: {
+          type: Boolean,
+          value: false
+        },
+        wsUrl: {
+          type: String
         }
       },
       ready: function() {
+        this._loadFragment('tsChart', '/elements/timeseries-chart/timeseries-trucks-chart.html');
+        console.log('fleet-manager-view is opened:');
+        this.wsUrl = document.querySelector('#view').elementData.wsUrl;
+        this.$.assetBrowser.addEventListener('px-app-asset-selected', function(evt) {
+          console.log('evt', evt);
+          this.openedAsset = evt.detail.item;
+        }.bind(this));
+        this.$.kpiBarAjaxEl.addEventListener('response', function (evt) {
+          var data = evt.detail.response;
+          if (Array.isArray(data)) {
+            data = data[0];
+          }
+          var kpis = data.kpis, overall = data.overall;
+          this.kpiDatapoints = kpis;
+          this.kpiOverallLabel = overall.title;
+          this.kpiOverallValue = overall.percentage;
+          this.kpiOverallMax = "100";
+          this.kpiBarWrapperState = 'kpi-bar-wrapper-datareceived';
+        }.bind(this));
+        this.$.datatableAjaxEl.addEventListener('response', function(evt) {
+          this.truckMaintenanceData = evt.detail.response;
+          this.$.kpiBarWrapperState = 'kpi-bar-wrapper-waiting';
+          this.$.kpiBarAjaxEl.generateRequest();
+
+        }.bind(this));
+
+
+
       },
       _truckAssetModelChanged: function(newVal) {
         console.log('truck asset model changed:', newVal);
       },
+      _assetModelChanged: function(newVal) {
+        console.log('asset model changed:', newVal);
+      },
       _openedAssetChanged: function(newVal) {
         console.log('asset opened:', newVal);
-        //this.$.datatableAjaxEl.url = "/api/datagrid" + newVal.uri;
-        //this.$.kpiBarAjaxEl.url = this.$.datatableAjaxEl.url + '/summary';
-        //this.$.datatableAjaxEl.generateRequest();
-        //if (newVal.assetTag) {
-        //  this.displayTags = this._formatTagsForDisplay(newVal.assetTag);
-        //}
-        //this.showTimeseriesChart = newVal.uri.indexOf('trucks') >= 0;
+        this.$.datatableAjaxEl.url = "/api/datagrid-trucks" + newVal.uri;
+        this.$.kpiBarAjaxEl.url = this.$.datatableAjaxEl.url + '/summary';
+        this.$.datatableAjaxEl.generateRequest();
+        if (newVal.assetTag) {
+          this.displayTags = this._formatTagsForDisplay(newVal.assetTag);
+        }
+        this.showTimeseriesChart = newVal.uri.indexOf('trucks') >= 0;
       },
+      // We'll load the timeseries-chart asynchronously, since it's pretty heavy.
+      _loadFragment: function (elementId, fragmentPath) {
+        if (Polymer.isInstance(this.$[elementId])) {
+          return;
+        }
+        Polymer.Base.importHref(fragmentPath, null, function () {
+          console.log('failed to load:', fragmentPath);
+        }, true);
+      },
+      _formatTagsForDisplay: function(assetTag) {
+        var tags = []
+        Object.keys(assetTag).forEach(function(key) {
+          var tag = {
+            key: assetTag[key].timeseriesDatasource.tag,
+            val: assetTag[key].label,
+            unit: 'psi'
+          }
+          if (tag.key.indexOf('Velocity')>-1) {
+            tag.unit = 'm/s'
+          }
+          tags.push(tag);
+        });
+        return tags;
+      }
     });
   </script>
 </dom-module>
